@@ -13,6 +13,7 @@ namespace Server
             HttpListener httpListener = new HttpListener();
             httpListener.Prefixes.Add(httpListenerPrefix);
             httpListener.Start();
+
             Console.WriteLine("Listening...");
 
             while (true)
