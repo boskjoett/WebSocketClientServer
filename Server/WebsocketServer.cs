@@ -6,7 +6,7 @@ using System.Collections.Specialized;
 
 namespace Server
 {
-    class WebsocketServer
+    internal class WebsocketServer
     {
         public async void Start(string httpListenerPrefix)
         {

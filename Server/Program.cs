@@ -12,7 +12,8 @@ namespace Server
         {
             WebsocketServer websocketServer = new WebsocketServer();
             websocketServer.Start("http://localhost:80/WebsocketHttpListenerDemo/");
-            Console.WriteLine("Press any key to exit...");
+
+            Console.WriteLine("Press any key to exit ...");
             Console.ReadKey();
         }
     }
