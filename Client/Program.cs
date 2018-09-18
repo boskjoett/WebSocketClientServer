@@ -14,7 +14,16 @@ namespace Client
     {
         static void Main(string[] args)
         {
-            Connect("ws://localhost/WebsocketHttpListenerDemo?TenantId=10").Wait();
+            string url = "ws://localhost/WebsocketHttpListenerDemo";
+
+            if (args.Length > 0)
+            {
+                url = args[0];
+            }
+
+            Console.WriteLine("Connecting to " + url);
+            Connect(url).Wait();
+
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey();
         }
@@ -57,13 +66,12 @@ namespace Client
                 Console.WriteLine("Sending:  " + stringToSend);
                 if (stringToSend == "close")
                 {
-                    await webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Close, true, CancellationToken.None);
+                    await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed by client", CancellationToken.None);
                 }
                 else
                 {
                     await webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
                 }
-                Console.WriteLine("Sent:     " + stringToSend);
 
                 await Task.Delay(1000);
                 Console.WriteLine("");

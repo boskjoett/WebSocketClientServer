@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Collections.Specialized;
+using System.Text;
 
 namespace Server
 {
@@ -38,13 +39,6 @@ namespace Server
 
             try
             {
-                NameValueCollection nvc = httpListenerContext.Request.QueryString;
-
-                int tenantId = 1;
-                string tenantString = nvc["TenantId"];
-                if (!string.IsNullOrEmpty(tenantString))
-                    tenantId = int.Parse(nvc["TenantId"]);
-
                 webSocketContext = await httpListenerContext.AcceptWebSocketAsync(subProtocol: null);
                 string ipAddress = httpListenerContext.Request.RemoteEndPoint.Address.ToString();
                 Console.WriteLine("Connected: IPAddress {0}", ipAddress);
@@ -67,14 +61,19 @@ namespace Server
                 {
                     WebSocketReceiveResult receiveResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(receiveBuffer), CancellationToken.None);
 
-                    // Echo back what was received
                     if (receiveResult.MessageType == WebSocketMessageType.Close)
                     {
+                        Console.WriteLine("Websocket closed by client");
                         await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
                     }
                     else
                     {
-                        await webSocket.SendAsync(new ArraySegment<byte>(receiveBuffer, 0, receiveResult.Count), WebSocketMessageType.Text, receiveResult.EndOfMessage, CancellationToken.None);
+                        // Echo back what was received
+                        var buffer = new ArraySegment<byte>(receiveBuffer, 0, receiveResult.Count);
+                        string message = Encoding.UTF8.GetString(buffer.Array, 0, receiveResult.Count);
+                        Console.WriteLine("Echoing message: " + message);
+
+                        await webSocket.SendAsync(buffer, WebSocketMessageType.Text, receiveResult.EndOfMessage, CancellationToken.None);
                     }
                 }
             }
