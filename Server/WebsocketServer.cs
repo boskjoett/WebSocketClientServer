@@ -1,9 +1,9 @@
 ﻿using System;
+using System.IO;
+using System.Text;
 using System.Net;
 using System.Net.WebSockets;
 using System.Threading;
-using System.Collections.Specialized;
-using System.Text;
 
 namespace Server
 {
@@ -20,13 +20,20 @@ namespace Server
             while (true)
             {
                 HttpListenerContext httpListenerContext = await httpListener.GetContextAsync();
+
                 if (httpListenerContext.Request.IsWebSocketRequest)
                 {
                     ProcessRequest(httpListenerContext);
                 }
                 else
                 {
-                    httpListenerContext.Response.StatusCode = 400;
+                    var response = httpListenerContext.Response;
+                    byte[] buffer = Encoding.UTF8.GetBytes("<html><body>Hallo from websocker server!</body></html>");
+                    response.ContentLength64 = buffer.Length;
+                    Stream output = response.OutputStream;
+                    output.Write(buffer, 0, buffer.Length);
+                    output.Close();
+                    httpListenerContext.Response.StatusCode = 200;
                     httpListenerContext.Response.Close();
                 }
             }

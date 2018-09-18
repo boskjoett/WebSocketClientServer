@@ -13,7 +13,7 @@ namespace Server
             WebsocketServer websocketServer = new WebsocketServer();
 
             Console.WriteLine("Starting websocket listener at ws://localhost:80/WebsocketHttpListenerDemo");
-            websocketServer.Start("http://localhost:80/WebsocketHttpListenerDemo/");
+            websocketServer.Start("http://+:80/WebsocketHttpListenerDemo/");
 
             Console.WriteLine("Press any key to exit ...");
             Console.ReadKey();
