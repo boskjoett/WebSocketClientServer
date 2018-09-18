@@ -11,7 +11,7 @@ EXPOSE 80
 ENTRYPOINT Server.exe
 
 # Run this command in a command prompt window to build the image:
-# docker build -t socketserver .
+# docker build -t websocketserver .
 
 # Run the image in a container with this command
-# docker run -it -p 80:80 --rm socketserver
+# docker run -it -p 8080:80 --rm websocketserver
